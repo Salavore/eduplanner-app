@@ -1,7 +1,120 @@
 <!DOCTYPE html>
-<html>
-  <head><title>EduPlanner - App</title></head>
-  <body>
-    <h1>Benvenuto in EduPlanner!</h1>
-  </body>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EduPlanner - Avvio</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: white;
+      color: #2196F3;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    img {
+      width: 150px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    #loading {
+      font-size: 1.2em;
+    }
+
+    #updateBox {
+      display: none;
+      background-color: #e3f2fd;
+      border: 1px solid #90caf9;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+
+    #updateBox h2 {
+      margin-top: 0;
+      color: #0d47a1;
+    }
+
+    #updateBox p {
+      margin-bottom: 15px;
+    }
+
+    #updateBtn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    #updateBtn:hover {
+      background-color: #388E3C;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://raw.githubusercontent.com/Salavore/eduplanner-app/refs/heads/main/app/EduPlannerLogo.jpeg" alt="EduPlanner Logo">
+  <div id="loading">Caricamento...</div>
+
+  <div id="updateBox">
+    <h2>È disponibile un aggiornamento!!</h2>
+    <p>È disponibile una nuova versione di EduPlanner!<br>
+    Cliccando su "Aggiorna" verrai portato al sito GitHub di EduPlanner per scaricare la versione più recente.</p>
+    <button id="updateBtn">Aggiorna</button>
+  </div>
+
+  <script>
+    const versioneLocale = "1.0.0"; // Cambia questo numero ad ogni release
+    const URL_VERSIONE = "https://raw.githubusercontent.com/Salavore/eduplanner-app/main/system/versione.txt";
+    const URL_AGGIORNAMENTO = "https://salavore.github.io/eduplanner-app/";
+
+    async function controllaAggiornamenti() {
+      try {
+        const response = await fetch(URL_VERSIONE);
+        const versioneRemota = (await response.text()).trim();
+
+        if (versioneRemota !== versioneLocale) {
+          document.getElementById('updateBox').style.display = 'block';
+          document.getElementById('loading').style.display = 'none';
+        } else {
+          avviaApp();
+        }
+      } catch (e) {
+        console.error("Errore durante il controllo aggiornamenti:", e);
+        avviaApp(); // Continua comunque se errore
+      }
+    }
+
+    function avviaApp() {
+      const datiUtente = localStorage.getItem("eduplannerData");
+      setTimeout(() => {
+        if (!datiUtente) {
+          // Nessun dato salvato → mostra il tutorial
+          window.location.href = "tutorial.html";
+        } else {
+          // Dati esistenti → vai alla home
+          window.location.href = "home.html";
+        }
+      }, 1000);
+    }
+
+    document.getElementById("updateBtn").addEventListener("click", () => {
+      window.open(URL_AGGIORNAMENTO, "_blank");
+    });
+
+    controllaAggiornamenti();
+  </script>
+</body>
 </html>
